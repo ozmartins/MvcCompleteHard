@@ -5,9 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Mappings\" />
-    <Folder Include="Contextt\" />
+    <Compile Remove="Migrations\20210423020304_initial.cs" />
+    <Compile Remove="Migrations\20210423020304_initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Repository\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hard.Business\Hard.Business.csproj" />
   </ItemGroup>
 
 </Project>
