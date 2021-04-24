@@ -42,7 +42,7 @@ namespace Hard.App.ViewModels
         [StringLength(50)]
         public string State { get; set; }
         
-        [HiddenInput]
-        public SupplierViewModel Supplier { get; set; }
+        /*[HiddenInput]
+        public SupplierViewModel Supplier { get; set; }*/
     }
 }

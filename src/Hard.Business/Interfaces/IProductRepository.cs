@@ -10,7 +10,7 @@ namespace Hard.Business.Interfaces
     {
         Task<Product> RecoverWithSupplier(Guid productId);
 
-        Task<IEnumerable<Product>> RecoverWithSuppliers();
+        Task<IEnumerable<Product>> RecoverAllWithSupplier();
 
         Task<IEnumerable<Product>> RecoverBySupplier(Guid supplierId);
     }
