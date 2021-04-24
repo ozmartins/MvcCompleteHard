@@ -22,8 +22,8 @@ namespace Hard.App.ViewModels
         [StringLength(1000)]
         public string Description { get; set; }
 
-        [DisplayName("Image")]
-        public IFormFile UploadImage { get; set; }
+        /*[DisplayName("Image")]
+        public IFormFile UploadImage { get; set; }*/
 
         [Required]
         [StringLength(500)]
@@ -36,7 +36,13 @@ namespace Hard.App.ViewModels
 
         public bool Active { get; set; }
 
+        [Required]
+        [DisplayName("Supplier")]
+        public Guid SupplierId { get; set; }
+
         [HiddenInput]
         public SupplierViewModel Supplier { get; set; }
+
+        public IEnumerable<SupplierViewModel> Suppliers { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace Hard.Data.Repository
                 .FirstOrDefaultAsync(p => p.Id == productId);
         }
 
-        public async Task<IEnumerable<Product>> RecoverWithSuppliers()
+        public async Task<IEnumerable<Product>> RecoverAllWithSupplier()
         {
             return await Context
                 .Products
