@@ -1,5 +1,7 @@
 using Hard.App.Data;
+using Hard.Business.Interfaces;
 using Hard.Data.Context;
+using Hard.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,7 +42,12 @@ namespace Hard.App
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             
             services.AddControllersWithViews();
-            
+
+            services.AddScoped<HardDbContext>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
+
             services.AddRazorPages();
         }
 
