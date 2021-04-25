@@ -10,9 +10,11 @@ using Hard.App.ViewModels;
 using Hard.Business.Interfaces;
 using AutoMapper;
 using Hard.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hard.App.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -68,6 +70,8 @@ namespace Hard.App.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {            
             var productViewModel = await recoverViewModel(id);
+
+            productViewModel.Suppliers = await recoverSuppliersList();
 
             if (productViewModel == null) return NotFound();
             

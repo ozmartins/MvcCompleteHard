@@ -8,8 +8,8 @@ namespace Hard.Business.Interfaces
 {
     public interface ISupplierRepository : IRepository<Supplier>
     {
-        Task<Supplier> RecoverWithAddresses(Guid supplierId);
+        Task<Supplier> RecoverWithAddress(Guid supplierId);
 
-        Task<Supplier> RecoverWithAddressesAndProducts(Guid supplierId);
+        Task<Supplier> RecoverWithAddressAndProducts(Guid supplierId);
     }
 }
