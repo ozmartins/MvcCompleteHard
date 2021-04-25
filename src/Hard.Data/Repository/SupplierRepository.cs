@@ -16,7 +16,7 @@ namespace Hard.Data.Repository
 
         }
 
-        public async Task<Supplier> RecoverWithAddresses(Guid supplierId)
+        public async Task<Supplier> RecoverWithAddress(Guid supplierId)
         {
             return await Context
                 .Suppliers
@@ -25,7 +25,7 @@ namespace Hard.Data.Repository
                 .FirstOrDefaultAsync(s => s.Id == supplierId);
         }
 
-        public async Task<Supplier> RecoverWithAddressesAndProducts(Guid supplierId)
+        public async Task<Supplier> RecoverWithAddressAndProducts(Guid supplierId)
         {
             return await Context
                 .Suppliers

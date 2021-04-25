@@ -10,9 +10,11 @@ using Hard.App.ViewModels;
 using Hard.Business.Interfaces;
 using AutoMapper;
 using Hard.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hard.App.Controllers
 {
+    [Authorize]
     public class SuppliersController : BaseControler
     {
         private readonly ISupplierRepository _supplierRepository;
@@ -112,7 +114,7 @@ namespace Hard.App.Controllers
 
         private async Task<SupplierViewModel> recoverViewModel(Guid id)
         {
-            return modelToView(await _supplierRepository.Recover(id));
+            return modelToView(await _supplierRepository.RecoverWithAddress(id));
         }
     }
 }

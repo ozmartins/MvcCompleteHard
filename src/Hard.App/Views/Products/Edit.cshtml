@@ -1,16 +1,15 @@
 ﻿@model Hard.App.ViewModels.ProductViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit produtc";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>ProductViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -24,14 +23,21 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <label asp-for="UploadImage" class="control-label"></label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="UploadImage" asp-for="UploadImage" />
+                    <label id="UploadImageLabel" class="custom-file-label" for="UploadImage"></label>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SupplierId" class="control-label"></label>
+                <select asp-for="SupplierId" class="form-control" asp-items="@(new SelectList(Model.Suppliers, "Id", "Name"))"><option /></select>
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -39,21 +45,21 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="SupplierId" class="control-label"></label>
-                <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
-                <span asp-validation-for="SupplierId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-action="Index">Back to list</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $("#UploadImage").change(function () {
+            $("#UploadImageLabel").text(this.files[0].name);
+        })
+        $("#UploadImage").attr("data-val", "true");
+        $("#UploadImage").attr("data-val-required", 'The field "Image" is mandatory.');
+    </script>
 }

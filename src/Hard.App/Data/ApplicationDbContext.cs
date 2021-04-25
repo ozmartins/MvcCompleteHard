@@ -14,5 +14,6 @@ namespace Hard.App.Data
         {
         }        
         public DbSet<Hard.App.ViewModels.ProductViewModel> ProductViewModel { get; set; }
+        public DbSet<Hard.App.ViewModels.AddressViewModel> AddressViewModel { get; set; }
     }
 }

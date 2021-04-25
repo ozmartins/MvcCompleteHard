@@ -1,12 +1,11 @@
 ﻿@model Hard.App.ViewModels.SupplierViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New supplier";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>SupplierViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,23 +23,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="DocumentType" class="control-label"></label>
-                <input asp-for="DocumentType" class="form-control" />
-                <span asp-validation-for="DocumentType" class="text-danger"></span>
+                <input type="radio" value="0" asp-for="DocumentType" checked/>  CPF
+                <input type="radio" value="1" asp-for="DocumentType"/>  CNPJ
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
                 </label>
             </div>
+            <h4>Address</h4>
+            <hr>
+            <partial name="_Address"/>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-action="Index">Back to list</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

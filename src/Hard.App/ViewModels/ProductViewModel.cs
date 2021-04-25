@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,8 +23,8 @@ namespace Hard.App.ViewModels
         [StringLength(1000)]
         public string Description { get; set; }
 
-        /*[DisplayName("Image")]
-        public IFormFile UploadImage { get; set; }*/
+        [DisplayName("Image")]
+        public IFormFile UploadImage { get; set; }
 
         [Required]
         [StringLength(500)]
@@ -41,8 +42,11 @@ namespace Hard.App.ViewModels
         public Guid SupplierId { get; set; }
 
         [HiddenInput]
+        [NotMapped]
         public SupplierViewModel Supplier { get; set; }
 
+        [HiddenInput]
+        [NotMapped]
         public IEnumerable<SupplierViewModel> Suppliers { get; set; }
     }
 }
