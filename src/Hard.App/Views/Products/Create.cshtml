@@ -24,9 +24,11 @@
             <div class="form-group">
                 <label asp-for="UploadImage" class="control-label"></label>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="UploadImage" asp-for="UploadImage"/>
+                    <input type="hidden" id="Image" asp-for="Image" />
+                    <input type="file" class="custom-file-input" id="UploadImage" asp-for="UploadImage" />
                     <label id="UploadImageLabel" class="custom-file-label" for="UploadImage"></label>
                 </div>
+                <span asp-validation-for="UploadImage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
@@ -57,8 +59,10 @@
     <script>
         $("#UploadImage").change(function () {            
             $("#UploadImageLabel").text(this.files[0].name);
+            $("#Image").val(this.files[0].name);
         })
         $("#UploadImage").attr("data-val", "true");
-        $("#UploadImage").attr("data-val-required", 'The field "Image" is mandatory.');
+        $("#UploadImage").attr("data-val-required", 'The field "Image" is mandatory.');        
+
     </script>
 }

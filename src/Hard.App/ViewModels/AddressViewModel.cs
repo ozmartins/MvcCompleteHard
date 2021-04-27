@@ -18,19 +18,20 @@ namespace Hard.App.ViewModels
         public string Street { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [StringLength(50)]
         public string Number { get; set; }
 
-        [StringLength(50)]
+        
+        [StringLength(200)]
         public string Complement { get; set; }
 
-        [Required]
-        [StringLength(200)]
+        [Required]        
         [DisplayName("Zip code")]
+        [StringLength(8, MinimumLength = 8)]
         public string ZipCode { get; set; }
 
         [Required]
-        [StringLength(8, MinimumLength = 8)]
+        [StringLength(200)]        
         public string Neighborhood { get; set; }
 
         [Required]

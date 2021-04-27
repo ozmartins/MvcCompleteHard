@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Hard.Data\Hard.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
