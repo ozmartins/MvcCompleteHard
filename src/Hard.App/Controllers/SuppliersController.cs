@@ -76,8 +76,23 @@ namespace Hard.App.Controllers
             if (id != supplierViewModel.Id) return NotFound();            
 
             if (!ModelState.IsValid) return View(supplierViewModel);
-            
-            await _supplierRepository.Update(viewToModel(supplierViewModel));
+
+            var model = await _supplierRepository.RecoverWithAddress(id);
+            model.Name = supplierViewModel.Name;
+            model.DocumentType = (DocumentType)supplierViewModel.DocumentType;
+            model.DocumentId = supplierViewModel.DocumentId;
+            model.Active = supplierViewModel.Active;            
+            await _supplierRepository.Update(model);
+
+            var address = await _addressRepository.Recover(model.Address.Id);
+            address.Neighborhood = supplierViewModel.Address.Neighborhood;
+            address.Number = supplierViewModel.Address.Number;
+            address.State = supplierViewModel.Address.State;
+            address.Street = supplierViewModel.Address.Street;
+            address.ZipCode = supplierViewModel.Address.ZipCode;
+            address.CityName = supplierViewModel.Address.CityName;
+            address.Complement = supplierViewModel.Address.Complement;
+            await _addressRepository.Update(address);
                 
             return RedirectToAction(nameof(Index));                        
         }
