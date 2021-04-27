@@ -19,11 +19,14 @@ namespace Hard.App.Controllers
     {
         private readonly ISupplierRepository _supplierRepository;
 
+        private readonly IAddressRepository _addressRepository;
+
         private readonly IMapper _mapper; 
 
-        public SuppliersController(ISupplierRepository supplierRepository, IMapper mapper)
+        public SuppliersController(ISupplierRepository supplierRepository, IAddressRepository addressRepository, IMapper mapper)
         {
             _supplierRepository = supplierRepository;
+            _addressRepository = addressRepository;
             _mapper = mapper;
         }
         
@@ -91,7 +94,11 @@ namespace Hard.App.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {            
+        {
+            var supplier = await _supplierRepository.RecoverWithAddress(id);
+            
+            await _addressRepository.Delete(supplier.Address.Id);
+
             await _supplierRepository.Delete(id);
             
             return RedirectToAction(nameof(Index));

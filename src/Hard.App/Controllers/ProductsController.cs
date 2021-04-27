@@ -11,6 +11,8 @@ using Hard.Business.Interfaces;
 using AutoMapper;
 using Hard.Business.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Hard.App.Controllers
 {
@@ -62,16 +64,16 @@ namespace Hard.App.Controllers
 
             if (!ModelState.IsValid) return View(productViewModel);
 
+            await UploadFile(productViewModel.UploadImage, productViewModel.Image);
+
             await _productRepository.Create(viewToModel(productViewModel));
 
             return RedirectToAction(nameof(Index));                                   
-        }
-       
+        }        
+
         public async Task<IActionResult> Edit(Guid id)
         {            
-            var productViewModel = await recoverViewModel(id);
-
-            productViewModel.Suppliers = await recoverSuppliersList();
+            var productViewModel = await recoverViewModel(id);            
 
             if (productViewModel == null) return NotFound();
             
@@ -82,10 +84,14 @@ namespace Hard.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProductViewModel productViewModel)
         {
+            productViewModel.Suppliers = await recoverSuppliersList();
+
             if (id != productViewModel.Id) return NotFound();
 
             if (!ModelState.IsValid) return View(productViewModel);
-            
+
+            await UploadFile(productViewModel.UploadImage, productViewModel.Image);
+
             await _productRepository.Update(viewToModel(productViewModel));
 
             return RedirectToAction(nameof(Index));
@@ -126,12 +132,30 @@ namespace Hard.App.Controllers
 
         private async Task<ProductViewModel> recoverViewModel(Guid id)
         {
-            return modelToView(await _productRepository.RecoverWithSupplier(id));
+            var view = modelToView(await _productRepository.RecoverWithSupplier(id));
+
+            view.Suppliers = await recoverSuppliersList();
+
+            return view;
         }
 
         private async Task<IEnumerable<SupplierViewModel>> recoverSuppliersList()
         {
             return _mapper.Map<IEnumerable<SupplierViewModel>>(await _supplierRepository.RecoverAll());
+        }
+
+        private async Task<bool> UploadFile(IFormFile image, string name)
+        {
+            if (image.Length == 0) return false;
+
+            var directoryName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", name);
+
+            using (var stream = new FileStream(directoryName, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            return true;
         }
     }
 }

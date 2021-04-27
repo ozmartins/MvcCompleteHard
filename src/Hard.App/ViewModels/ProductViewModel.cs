@@ -24,6 +24,7 @@ namespace Hard.App.ViewModels
         public string Description { get; set; }
 
         [DisplayName("Image")]
+        [NotMapped]
         public IFormFile UploadImage { get; set; }
 
         [Required]
