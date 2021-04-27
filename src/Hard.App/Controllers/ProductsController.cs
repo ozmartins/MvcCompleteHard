@@ -64,9 +64,11 @@ namespace Hard.App.Controllers
 
             if (!ModelState.IsValid) return View(productViewModel);
 
-            await UploadFile(productViewModel.UploadImage, productViewModel.Image);
+            var model = viewToModel(productViewModel);
 
-            await _productRepository.Create(viewToModel(productViewModel));
+            await _productRepository.Create(model);
+
+            await UploadFile(model.Id, productViewModel);
 
             return RedirectToAction(nameof(Index));                                   
         }        
@@ -75,7 +77,7 @@ namespace Hard.App.Controllers
         {            
             var productViewModel = await recoverViewModel(id);            
 
-            if (productViewModel == null) return NotFound();
+            if (productViewModel == null) return NotFound();            
             
             return View(productViewModel);
         }
@@ -83,16 +85,22 @@ namespace Hard.App.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProductViewModel productViewModel)
-        {
-            productViewModel.Suppliers = await recoverSuppliersList();
-
+        {            
             if (id != productViewModel.Id) return NotFound();
 
             if (!ModelState.IsValid) return View(productViewModel);
 
-            await UploadFile(productViewModel.UploadImage, productViewModel.Image);
+            var model = await _productRepository.Recover(id);
 
-            await _productRepository.Update(viewToModel(productViewModel));
+            model.Active = productViewModel.Active;
+            model.Description = productViewModel.Description;
+            model.Image = productViewModel.Image;
+            model.Name = productViewModel.Name;
+            model.Price = productViewModel.Price;            
+
+            await _productRepository.Update(model);
+
+            await UploadFile(id, productViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -132,9 +140,7 @@ namespace Hard.App.Controllers
 
         private async Task<ProductViewModel> recoverViewModel(Guid id)
         {
-            var view = modelToView(await _productRepository.RecoverWithSupplier(id));
-
-            view.Suppliers = await recoverSuppliersList();
+            var view = modelToView(await _productRepository.RecoverWithSupplier(id));            
 
             return view;
         }
@@ -144,18 +150,24 @@ namespace Hard.App.Controllers
             return _mapper.Map<IEnumerable<SupplierViewModel>>(await _supplierRepository.RecoverAll());
         }
 
-        private async Task<bool> UploadFile(IFormFile image, string name)
+        private async Task UploadFile(Guid productId, ProductViewModel productViewModel)
         {
-            if (image.Length == 0) return false;
+            if (productViewModel.UploadImage == null) return;
 
-            var directoryName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", name);
+            if (productViewModel.UploadImage.Length == 0) return;
+           
+            var directoryName = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{productId}");
 
-            using (var stream = new FileStream(directoryName, FileMode.Create))
+            if (!Directory.Exists(directoryName)) Directory.CreateDirectory(directoryName);                                    
+
+            var fileName = Path.Combine(directoryName, productViewModel.Image);
+
+            using (var stream = new FileStream(fileName, FileMode.Create))
             {
-                await image.CopyToAsync(stream);
-            }
-
-            return true;
+                await productViewModel.UploadImage.CopyToAsync(stream);
+            }            
         }
+
+        
     }
 }
