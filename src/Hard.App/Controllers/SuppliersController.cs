@@ -82,17 +82,7 @@ namespace Hard.App.Controllers
             model.DocumentType = (DocumentType)supplierViewModel.DocumentType;
             model.DocumentId = supplierViewModel.DocumentId;
             model.Active = supplierViewModel.Active;            
-            await _supplierRepository.Update(model);
-
-            var address = await _addressRepository.Recover(model.Address.Id);
-            address.Neighborhood = supplierViewModel.Address.Neighborhood;
-            address.Number = supplierViewModel.Address.Number;
-            address.State = supplierViewModel.Address.State;
-            address.Street = supplierViewModel.Address.Street;
-            address.ZipCode = supplierViewModel.Address.ZipCode;
-            address.CityName = supplierViewModel.Address.CityName;
-            address.Complement = supplierViewModel.Address.Complement;
-            await _addressRepository.Update(address);
+            await _supplierRepository.Update(model);            
                 
             return RedirectToAction(nameof(Index));                        
         }
@@ -136,7 +126,7 @@ namespace Hard.App.Controllers
 
         private async Task<SupplierViewModel> recoverViewModel(Guid id)
         {
-            return modelToView(await _supplierRepository.RecoverWithAddress(id));
+            return modelToView(await _supplierRepository.RecoverWithAddressAndProducts(id));
         }
     }
 }
