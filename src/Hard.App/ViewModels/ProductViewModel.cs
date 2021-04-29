@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Hard.App.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace Hard.App.ViewModels
         [StringLength(500)]
         public string Image { get; set; }
 
+        [Currency]
         public decimal Price { get; set; }
 
         [ScaffoldColumn(false)]

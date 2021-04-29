@@ -1,4 +1,5 @@
 using Hard.App.Data;
+using Hard.App.Extensions;
 using Hard.Business.Interfaces;
 using Hard.Data.Context;
 using Hard.Data.Repository;
@@ -7,12 +8,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -49,6 +53,7 @@ namespace Hard.App
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddSingleton<IValidationAttributeAdapterProvider, CurrencyAttributeAdapterProvider>();
 
             services.AddRazorPages();
         }
@@ -74,6 +79,15 @@ namespace Hard.App
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var defaultCuture = new CultureInfo("pt-BR");
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(defaultCuture),
+                SupportedCultures = new List<CultureInfo> { defaultCuture },
+                SupportedUICultures = new List<CultureInfo> { defaultCuture }
+            };
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseEndpoints(endpoints =>
             {
