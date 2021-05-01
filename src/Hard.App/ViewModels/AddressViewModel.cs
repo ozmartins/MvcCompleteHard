@@ -41,6 +41,8 @@ namespace Hard.App.ViewModels
 
         [Required]
         [StringLength(50)]
-        public string State { get; set; }               
+        public string State { get; set; }        
+                
+        public Guid SupplierId { get; set; }
     }
 }
