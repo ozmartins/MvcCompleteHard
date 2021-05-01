@@ -1,6 +1,6 @@
 ﻿@model Hard.App.ViewModels.SupplierViewModel
 
-@{ 
+@{
     ViewData["Title"] = "Update address";
 }
 
@@ -16,13 +16,16 @@
         <input type="hidden" asp-for="Address.Id" />
         <input type="hidden" asp-for="Address.SupplierId" />
 
-        <partial name="_Address"> 
+        <partial name="_Address">
 
-        <div class="modal-footer">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-success"/>
-                <input type="button" value="Close" class="btn btn-info" data-dismiss="modal"/>
+            <div class="modal-footer">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                    <input type="button" value="Close" class="btn btn-info" data-dismiss="modal" />
+                </div>
             </div>
-        </div>
     </div>
 </form>
+
+
+<script>SearchZipCode();</script>
