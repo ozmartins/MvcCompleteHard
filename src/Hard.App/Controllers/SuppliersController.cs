@@ -109,6 +109,41 @@ namespace Hard.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> UpdateAddress(Guid id)
+        {
+            var supplier = await _supplierRepository.RecoverWithAddress(id);
+
+            if (supplier == null) return NotFound();
+
+            return PartialView("_UpdateAddress", new SupplierViewModel() { Address = _mapper.Map<AddressViewModel>(supplier.Address) });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAddress(SupplierViewModel supplierViewModel)
+        {
+            ModelState.Remove("Name");
+
+            ModelState.Remove("DocumentId");
+
+            if (!ModelState.IsValid) return PartialView("_UpdateAddress", supplierViewModel);
+
+            await _addressRepository.Update(_mapper.Map<Address>(supplierViewModel.Address));
+
+            var url = Url.Action("GetAddress", "Suppliers", new { id = supplierViewModel.Id });
+
+            return Json(new { Success = true, url = url});
+        }
+
+        public async Task<IActionResult> GetAddress(Guid id)
+        {
+            var supplier = await _supplierRepository.RecoverWithAddress(id);
+
+            if (supplier == null) return NotFound();
+
+            return PartialView("_DetailsAddress", new SupplierViewModel() { Address = _mapper.Map<AddressViewModel>(supplier.Address) });
+        }
+
         private SupplierViewModel modelToView(Supplier model)
         {
             return _mapper.Map<SupplierViewModel>(model);
