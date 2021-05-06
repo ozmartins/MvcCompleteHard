@@ -1,34 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Hard.App.Data;
+﻿using AutoMapper;
 using Hard.App.ViewModels;
 using Hard.Business.Interfaces;
-using AutoMapper;
 using Hard.Business.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Hard.App.Controllers
 {
     [Authorize]
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _productService;
+
+        private readonly IProductRepository _productRepository;        
 
         private readonly ISupplierRepository _supplierRepository;
 
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductRepository productRepository,
+        public ProductsController(IProductService productService,
+                                  IProductRepository productRepository,
                                   ISupplierRepository supplierRepository,
-                                  IMapper mapper)
+                                  IMapper mapper,
+                                  INotifier notifier) : base(notifier)
         {
+            _productService = productService;
             _productRepository = productRepository;
             _supplierRepository = supplierRepository;
             _mapper = mapper;
@@ -51,7 +51,7 @@ namespace Hard.App.Controllers
         
         public async Task<IActionResult> Create()
         {
-            var product = new ProductViewModel() { Suppliers = await recoverSuppliersList() };
+            var product = new ProductViewModel() { Suppliers = await recoverSuppliersList() };          
 
             return View(product);
         }        
@@ -66,9 +66,13 @@ namespace Hard.App.Controllers
 
             var model = viewToModel(productViewModel);
 
-            await _productRepository.Create(model);
+            await _productService.Create(model);            
 
             await UploadFile(model.Id, productViewModel);
+
+            if (!ValidOperation()) return View(productViewModel);
+
+            TempData["Success"] = "Product succesfully created";
 
             return RedirectToAction(nameof(Index));                                   
         }        
@@ -78,7 +82,7 @@ namespace Hard.App.Controllers
             var productViewModel = await recoverViewModel(id);            
 
             if (productViewModel == null) return NotFound();            
-            
+
             return View(productViewModel);
         }
         
@@ -98,9 +102,13 @@ namespace Hard.App.Controllers
             model.Name = productViewModel.Name;
             model.Price = productViewModel.Price;            
 
-            await _productRepository.Update(model);
+            await _productService.Update(model);
 
             await UploadFile(id, productViewModel);
+
+            if (!ValidOperation()) return View(productViewModel);
+
+            TempData["Success"] = "Product succesfully updated";
 
             return RedirectToAction(nameof(Index));
         }
@@ -118,7 +126,11 @@ namespace Hard.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _productRepository.Delete(id);
+            await _productService.Delete(id);
+
+            if (!ValidOperation()) return View(_productRepository.Recover(id));
+
+            TempData["Success"] = "Product succesfully removed";
 
             return RedirectToAction(nameof(Index));
         }        

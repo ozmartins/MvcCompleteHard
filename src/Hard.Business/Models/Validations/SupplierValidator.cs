@@ -20,7 +20,7 @@ namespace Hard.Business.Models.Validations
 
             When(s => s.DocumentType == DocumentType.CNPJ, () => {
                 RuleFor(s => s.DocumentId.Length).Equal(CnpjValidator.CnpjLength).WithMessage("CNPJ size is inválid.");
-                RuleFor(s => CpfValidator.Validate(s.DocumentId)).Equal(true).WithMessage("CNPJ {PropertyValue} is inválid");
+                RuleFor(s => CnpjValidator.Validate(s.DocumentId)).Equal(true).WithMessage("CNPJ {PropertyValue} is inválid");
             });
         }
     }

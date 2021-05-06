@@ -10,25 +10,35 @@ namespace Hard.Business.Services
 {
     public class ProductService : BaseService, IProductService
     {
-        public Task Create(Product product)
+        IProductRepository _productRepository;
+
+        public ProductService(IProductRepository productRepository, INotifier notifier) : base(notifier)
         {
-            if (!ExecuteValidation(new ProductValidator(), product) || !ExecuteValidation(new ProductValidator(), product))
-                return Task.CompletedTask;
-            else
-                return Task.CompletedTask;
+            _productRepository = productRepository;
         }
 
-        public Task Delete(Guid id)
+        public async Task Create(Product product)
         {
-            throw new NotImplementedException();
+            if (!ExecuteValidation(new ProductValidator(), product) || !ExecuteValidation(new ProductValidator(), product)) return;
+
+            await _productRepository.Create(product);
         }
 
-        public Task Update(Product product)
+        public async Task Delete(Guid id)
         {
-            if (!ExecuteValidation(new ProductValidator(), product) || !ExecuteValidation(new ProductValidator(), product))
-                return Task.CompletedTask;
-            else
-                return Task.CompletedTask;
+            await _productRepository.Delete(id);
+        }
+
+        public void Dispose()
+        {
+            _productRepository?.Dispose();
+        }
+
+        public async Task Update(Product product)
+        {
+            if (!ExecuteValidation(new ProductValidator(), product) || !ExecuteValidation(new ProductValidator(), product)) ;
+            
+            await _productRepository.Update(product);
         }
     }
 }

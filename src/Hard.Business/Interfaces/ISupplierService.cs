@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hard.Business.Interfaces
 {
-    public interface ISupplierService
+    public interface ISupplierService : IDisposable
     {
         public Task Create(Supplier supplier);
 

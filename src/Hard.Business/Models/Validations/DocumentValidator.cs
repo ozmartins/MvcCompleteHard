@@ -61,15 +61,15 @@ namespace Hard.Business.Models.Validations
     {
         public const int CnpjLength = 14;
 
-        public static bool Validar(string cpnj)
+        public static bool Validate(string cpnj)
         {
             var cnpjNumeros = Utils.OnlyNumbes(cpnj);
 
-            if (!TemTamanhoValido(cnpjNumeros)) return false;
+            if (!HasValideLength(cnpjNumeros)) return false;
             return !HasRepeatedDigits(cnpjNumeros) && HasValidDigits(cnpjNumeros);
         }
 
-        private static bool TemTamanhoValido(string valor)
+        private static bool HasValideLength(string valor)
         {
             return valor.Length == CnpjLength;
         }

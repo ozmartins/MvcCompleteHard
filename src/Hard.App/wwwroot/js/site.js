@@ -105,5 +105,5 @@ function SearchZipCode() {
 }
 
 $(document).ready(function () {
-    $("#msg_box").fadeOut(2500);
+    $("#msg-box").fadeOut(2500);
 });

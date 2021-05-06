@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Hard.App.Data;
+﻿using AutoMapper;
 using Hard.App.ViewModels;
 using Hard.Business.Interfaces;
-using AutoMapper;
 using Hard.Business.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Hard.App.Controllers
 {
     [Authorize]
-    public class SuppliersController : BaseControler
+    public class SuppliersController : BaseController
     {
         private readonly ISupplierRepository _supplierRepository;
 
-        private readonly IAddressRepository _addressRepository;
+        private readonly ISupplierService _supplierService;
 
         private readonly IMapper _mapper; 
 
-        public SuppliersController(ISupplierRepository supplierRepository, IAddressRepository addressRepository, IMapper mapper)
+        public SuppliersController(ISupplierRepository supplierRepository, ISupplierService supplierService, IMapper mapper, INotifier notifier) : base(notifier)
         {
             _supplierRepository = supplierRepository;
-            _addressRepository = addressRepository;
+            _supplierService = supplierService;
             _mapper = mapper;
         }
         
@@ -55,8 +51,12 @@ namespace Hard.App.Controllers
         {
             if (!ModelState.IsValid) return View(supplierViewModel);
             
-            await _supplierRepository.Create(viewToModel(supplierViewModel));
-            
+            await _supplierService.Create(viewToModel(supplierViewModel));
+
+            if (!ValidOperation()) return View(supplierViewModel);
+
+            TempData["Success"] = "Supplier succesfully created";
+
             return RedirectToAction(nameof(Index));
         }
         
@@ -82,8 +82,12 @@ namespace Hard.App.Controllers
             model.DocumentType = (DocumentType)supplierViewModel.DocumentType;
             model.DocumentId = supplierViewModel.DocumentId;
             model.Active = supplierViewModel.Active;            
-            await _supplierRepository.Update(model);            
-                
+            await _supplierService.Update(model);
+
+            if (!ValidOperation()) return View(supplierViewModel);
+
+            TempData["Success"] = "Supplier succesfully edited";
+
             return RedirectToAction(nameof(Index));                        
         }
         
@@ -100,12 +104,14 @@ namespace Hard.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var supplier = await _supplierRepository.RecoverWithAddress(id);
-            
-            await _addressRepository.Delete(supplier.Address.Id);
+            var supplier = await _supplierRepository.RecoverWithAddress(id);                       
 
-            await _supplierRepository.Delete(id);
-            
+            await _supplierService.Delete(id);
+
+            if (!ValidOperation()) return View(modelToView(supplier));
+
+            TempData["Success"] = "Supplier succesfully deleted";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -128,7 +134,7 @@ namespace Hard.App.Controllers
 
             if (!ModelState.IsValid) return PartialView("_UpdateAddress", supplierViewModel);
 
-            await _addressRepository.Update(_mapper.Map<Address>(supplierViewModel.Address));
+            await _supplierService.UpdateAddress(_mapper.Map<Address>(supplierViewModel.Address));
 
             var url = Url.Action("GetAddress", "Suppliers", new { id = supplierViewModel.Id });
 
