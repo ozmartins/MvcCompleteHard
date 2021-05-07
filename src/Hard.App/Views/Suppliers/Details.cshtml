@@ -33,7 +33,7 @@
 </div>
 
 <div>
-    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id" disable-by-claim-name="supplier" disable-by-claim-value="update">Edit</a>
     <a class="btn btn-secondary" href="javascript:window.history.back();">Back to List</a>
 </div>
 

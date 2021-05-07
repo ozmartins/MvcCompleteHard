@@ -10,7 +10,7 @@
 <hr />
 
 <p>
-    <a class="btn btn-info" asp-action="Create">Create New</a>
+    <a class="btn btn-info" asp-action="Create" supress-by-claim-name="supplier" supress-by-claim-value="create">Create New</a>
 </p>
 
 <table class="table table-hover">
@@ -41,9 +41,9 @@
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
             <td class="text-right">
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><spam class="fa fa-search"></spam></a>
-                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><spam class="fa fa-pencil-alt"></spam></a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id"><spam class="fa fa-trash"></spam></a>
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id" disable-by-claim-name="supplier" disable-by-claim-value="recover"><spam class="fa fa-search"></spam></a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id" disable-by-claim-name="supplier" disable-by-claim-value="update"><spam class="fa fa-pencil-alt"></spam></a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" disable-by-claim-name="supplier" disable-by-claim-value="delete"><spam class="fa fa-trash"></spam></a>
             </td>
         </tr>
 }

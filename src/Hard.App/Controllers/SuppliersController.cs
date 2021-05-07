@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hard.App.Extensions;
 using Hard.App.ViewModels;
 using Hard.Business.Interfaces;
 using Hard.Business.Models;
@@ -25,12 +26,14 @@ namespace Hard.App.Controllers
             _supplierService = supplierService;
             _mapper = mapper;
         }
-        
+
+        [ClaimsAuthorize("supplier", "recover")]
         public async Task<IActionResult> Index()
         {
             return View(await recoverViewList());
         }
-        
+
+        [ClaimsAuthorize("supplier", "recover")]
         public async Task<IActionResult> Details(Guid id)
         {            
             var supplierViewModel =  await recoverViewModel(id);
@@ -38,13 +41,15 @@ namespace Hard.App.Controllers
             if (supplierViewModel == null) return NotFound();
 
             return View(supplierViewModel);
-        }        
+        }
 
+        [ClaimsAuthorize("supplier", "create")]
         public IActionResult Create()
         {
             return View();
         }
-        
+
+        [ClaimsAuthorize("supplier", "create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SupplierViewModel supplierViewModel)
@@ -59,7 +64,8 @@ namespace Hard.App.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        
+
+        [ClaimsAuthorize("supplier", "update")]
         public async Task<IActionResult> Edit(Guid id)
         {           
             var supplierViewModel = await recoverViewModel(id);
@@ -68,7 +74,8 @@ namespace Hard.App.Controllers
             
             return View(supplierViewModel);
         }
-        
+
+        [ClaimsAuthorize("supplier", "update")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, SupplierViewModel supplierViewModel)
@@ -90,7 +97,8 @@ namespace Hard.App.Controllers
 
             return RedirectToAction(nameof(Index));                        
         }
-        
+
+        [ClaimsAuthorize("supplier", "delete")]
         public async Task<IActionResult> Delete(Guid id)
         {            
             var supplierViewModel = await recoverViewModel(id);
@@ -99,7 +107,8 @@ namespace Hard.App.Controllers
 
             return View(supplierViewModel);
         }
-        
+
+        [ClaimsAuthorize("supplier", "delete")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -115,6 +124,7 @@ namespace Hard.App.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ClaimsAuthorize("supplier", "update")]
         public async Task<IActionResult> UpdateAddress(Guid id)
         {
             var supplier = await _supplierRepository.RecoverWithAddress(id);
@@ -124,6 +134,7 @@ namespace Hard.App.Controllers
             return PartialView("_UpdateAddress", new SupplierViewModel() { Address = _mapper.Map<AddressViewModel>(supplier.Address) });
         }
 
+        [ClaimsAuthorize("supplier", "update")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAddress(SupplierViewModel supplierViewModel)
@@ -141,6 +152,7 @@ namespace Hard.App.Controllers
             return Json(new { Success = true, url = url});
         }
 
+        [ClaimsAuthorize("supplier", "recover")]
         public async Task<IActionResult> GetAddress(Guid id)
         {
             var supplier = await _supplierRepository.RecoverWithAddress(id);

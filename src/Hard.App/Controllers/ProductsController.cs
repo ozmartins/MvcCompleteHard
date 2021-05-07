@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hard.App.Extensions;
 using Hard.App.ViewModels;
 using Hard.Business.Interfaces;
 using Hard.Business.Models;
@@ -34,12 +35,13 @@ namespace Hard.App.Controllers
             _mapper = mapper;
         }
 
-       
+        [ClaimsAuthorize("product", "recover")]
         public async Task<IActionResult> Index()
         {            
             return View(await recoverViewList());
         }
-        
+
+        [ClaimsAuthorize("product", "recover")]
         public async Task<IActionResult> Details(Guid id)
         {            
             var productViewModel = await recoverViewModel(id);
@@ -48,14 +50,16 @@ namespace Hard.App.Controllers
 
             return View(productViewModel);
         }
-        
+
+        [ClaimsAuthorize("product", "create")]
         public async Task<IActionResult> Create()
         {
             var product = new ProductViewModel() { Suppliers = await recoverSuppliersList() };          
 
             return View(product);
-        }        
-        
+        }
+
+        [ClaimsAuthorize("product", "create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel productViewModel)
@@ -75,8 +79,9 @@ namespace Hard.App.Controllers
             TempData["Success"] = "Product succesfully created";
 
             return RedirectToAction(nameof(Index));                                   
-        }        
+        }
 
+        [ClaimsAuthorize("product", "update")]
         public async Task<IActionResult> Edit(Guid id)
         {            
             var productViewModel = await recoverViewModel(id);            
@@ -85,7 +90,8 @@ namespace Hard.App.Controllers
 
             return View(productViewModel);
         }
-        
+
+        [ClaimsAuthorize("product", "update")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProductViewModel productViewModel)
@@ -112,7 +118,8 @@ namespace Hard.App.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        
+
+        [ClaimsAuthorize("product", "delete")]
         public async Task<IActionResult> Delete(Guid id)
         {            
             var productViewModel = await recoverViewModel(id);
@@ -122,6 +129,7 @@ namespace Hard.App.Controllers
             return View(productViewModel);
         }
 
+        [ClaimsAuthorize("product", "delete")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
