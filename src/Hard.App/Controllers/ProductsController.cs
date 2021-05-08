@@ -60,8 +60,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("product", "create")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]       
         public async Task<IActionResult> Create(ProductViewModel productViewModel)
         {
             productViewModel.Suppliers = await recoverSuppliersList();
@@ -92,8 +91,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("product", "update")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<IActionResult> Edit(Guid id, ProductViewModel productViewModel)
         {            
             if (id != productViewModel.Id) return NotFound();
@@ -130,8 +128,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("product", "delete")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]       
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _productService.Delete(id);
