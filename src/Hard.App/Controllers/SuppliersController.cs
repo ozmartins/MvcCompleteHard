@@ -50,8 +50,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("supplier", "create")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<IActionResult> Create(SupplierViewModel supplierViewModel)
         {
             if (!ModelState.IsValid) return View(supplierViewModel);
@@ -76,8 +75,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("supplier", "update")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<IActionResult> Edit(Guid id, SupplierViewModel supplierViewModel)
         {
             if (id != supplierViewModel.Id) return NotFound();            
@@ -109,8 +107,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("supplier", "delete")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]        
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var supplier = await _supplierRepository.RecoverWithAddress(id);                       
@@ -135,8 +132,7 @@ namespace Hard.App.Controllers
         }
 
         [ClaimsAuthorize("supplier", "update")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<IActionResult> UpdateAddress(SupplierViewModel supplierViewModel)
         {
             ModelState.Remove("Name");
